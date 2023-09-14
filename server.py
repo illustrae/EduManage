@@ -1,0 +1,6 @@
+from password_gen_app import app
+# from password_gen_app.controllers import 
+
+
+if __name__ =='__main__':
+    app.run(debug=False)
