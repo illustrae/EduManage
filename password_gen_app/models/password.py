@@ -17,21 +17,21 @@ class Recipe:
     
     @classmethod
     def get_all_passwords(cls):
-        query = 'SELECT * FROM recipes'
+        query = 'SELECT * FROM passwords'
         results = connectToMySQL(db).query_db(query)
         passwords = [cls(row) for row in results]
         return passwords
     
     @classmethod
     def get_one_password(cls,id):
-        query = f'SELECT * FROM recipes WHERE ID = {id}'
+        query = f'SELECT * FROM passwords WHERE ID = {id}'
         result = connectToMySQL(db).query_db(query)
         return cls(result[0])
     
     
     @classmethod
     def destroy(cls, id):
-        query = f'SELECT * FROM recipes WHERE ID = {id}'
+        query = f'SELECT * FROM passwords WHERE ID = {id}'
         return connectToMySQL(db).query_db(query)
     
     
