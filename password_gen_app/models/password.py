@@ -8,11 +8,12 @@ class Recipe:
     def __init__(self, data):
         self.id = data['id']
         self.gen_password = data['gen_password']
+        self.key = data['key']
         self.creator = data['users_id']
     
     @classmethod
-    def create_password(cls,data, users_id):
-        query = f'INSERT INTO passwords (gen_password, users_id) VALUE( %(gen_password)s, {users_id})'
+    def create_password(cls,data):
+        query = 'INSERT INTO passwords (gen_password, key, users_id) VALUE( %(gen_password)s, %(key)s, %(users_id)s)'
         return connectToMySQL(db).query_db(query,data)
     
     @classmethod
@@ -34,7 +35,9 @@ class Recipe:
         query = f'SELECT * FROM passwords WHERE ID = {id}'
         return connectToMySQL(db).query_db(query)
     
-    
+    @staticmethod
+    def generate_pw(data):
+        pass
     
     
     
