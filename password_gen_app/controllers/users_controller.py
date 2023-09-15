@@ -10,7 +10,7 @@ def index():
 def generate_password():
     
     
-    
+    #Will place generate_pw(request.form) method when built.
     
     
     
