@@ -48,7 +48,7 @@ class User:
         if not EMAIL_REGEX.match(postData['email']):
             flash("Invalid email address format!", 'register')
             is_valid = False
-        if len(postData['username']) < 5:
+        if len(postData['username']) <= 5:
             flash("Username should be at least 6 characters.", 'register')
             is_valid = False
         if  0 <= len(postData['password']) <= 7:
