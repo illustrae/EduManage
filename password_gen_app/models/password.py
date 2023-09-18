@@ -78,15 +78,10 @@ class Password:
         for index in range(len(values_list)):
             for each_instance in range(values_list[index]):
                 random_index = randint(1,len(character_list[counter])-1)
-                print("random index", random_index)
                 password_generated.append(character_list[counter][random_index-1:random_index][0])
-                print(character_list[counter])
                 character_list[counter].pop(random_index-1)
-                print(character_list[counter])
-                print(password_generated)
                 shuffle(password_generated)
             counter+=1
-            print("Finished",password_generated)
         return "".join(password_generated)
 
 
@@ -97,6 +92,7 @@ class Password:
         Args:
             data (request.form): form data
             params_list (list): Values from the checkbox selections 
+            num_of_each (dict): A dict that has params_list strings as keys and the value represents the number of each based off a percentage of the total password length.
 
         Returns:
             string: generated password
@@ -121,18 +117,14 @@ class Password:
                 num_of_each[param] = round(int(data['password_length']) * (percentages[index]))
                 character_list=Password.create_character_list(param,character_list)
         
-        print(num_of_each)
         values_list =[num_of_each[key] for key in num_of_each]
         if sum(values_list) == int(data['password_length']):
-            print("Equal", values_list)
             return Password.populate_and_shuffle(values_list,character_list) 
         elif sum(values_list) > int(data['password_length']):
             values_list[randint(0,2)]-=1
-            print("value is greater",values_list)
             return Password.populate_and_shuffle(values_list,character_list)
         else:
             values_list[randint(0,2)]+=1
-            print("value is less",values_list)
             return Password.populate_and_shuffle(values_list, character_list)
     
     
