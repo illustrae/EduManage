@@ -13,6 +13,7 @@
         <div class="d-flex flex-row-reverse m-3">
             <a class="mx-1" href="/register"><button>Register</button></a>
             <a class="mx-1" href="/login"><button>Login</button></a>
+            <h3 class="me-auto">Welcome, {{user.full_name()}}</h3>
         </div>
         <div class="row">
             <form action="/generate" method="POST">
