@@ -24,7 +24,7 @@ class User:
             'username': postData['username'],
             'password': pw_hash
         }
-        query = 'INSERT INTO users (first_name, last_name, email, password, username) VALUES ( %(first_name)s, %(last_name)s, %(email)s, %(username)s, %(password)s)'
+        query = 'INSERT INTO users (first_name, last_name, email, username, password) VALUES ( %(first_name)s, %(last_name)s, %(email)s, %(username)s, %(password)s)'
         return connectToMySQL(db).query_db(query,data)
     
     @classmethod
@@ -33,6 +33,8 @@ class User:
         result = connectToMySQL(db).query_db(query)
         return cls(result[0])
     
+    def full_name(self):
+        return f'{self.first_name} {self.last_name}'
     
     @staticmethod
     def registervalidator(postData):
@@ -40,7 +42,7 @@ class User:
         EMAIL_REGEX = re.compile('^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
         
         if len(postData['first_name']) < 3:
-            flash("First name should be at least three characters." , 'register')
+            flash("First name should be at least 3 characters." , 'register')
             is_valid = False 
         if len(postData['last_name']) < 3:
             flash("Last name should be at least 3 characters.", 'register')
@@ -57,7 +59,8 @@ class User:
         elif postData['c_password'] != postData['password']:
             flash("Passwords do not match!", 'register')
             is_valid = False
-        flash('Successfully registered!', 'register')
+        if is_valid:
+            flash('Successfully registered!', 'register')
         return is_valid
     
     @staticmethod

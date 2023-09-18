@@ -2,22 +2,30 @@ from password_gen_app import app
 from flask import render_template, session, redirect, request
 from cryptography.fernet import Fernet
 from ..models.password import Password
-@app.route('/')
-def index():
-    if 'generated_password' in session:
-        generated_password = session['generated_password']
-        return render_template('main.html', generated_password = generated_password)
-    else:
-        return render_template('main.html')
+from ..models.user import User
 
-@app.route('/generate', methods=['POST'])
-def generate_password():
-    print("I'm here")
-    session['generated_password'] = Password.password_generator(request.form, request.form.getlist("params"))
 
-    if 'user_logged_in' in session:
-        key = Fernet.generate_key()
-        pass_gen=Fernet(key)
-        pass_gen.encrypt(request.form['gen_password'])
+
+@app.route('/register')
+def register_user():
     
-    return redirect('/')
+    return render_template('register.html')
+
+@app.route('/processregister', methods=['POST'])
+def process_register():
+    if User.registervalidator(request.form):
+        session['user_logged_in']=User.create(request.form)
+        return redirect('/logged_in')
+    return redirect('/register')
+
+@app.route('/login')
+def login():
+    
+    return render_template('login.html')
+
+@app.route('/processlogin', methods=['POST'])
+def process_login():
+    if User.loginvalidator(request.form):
+        session['user_logged_in']=User.create(request.form)
+        return redirect('/logged_in')
+    return redirect('/login')
