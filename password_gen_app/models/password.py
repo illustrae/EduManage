@@ -1,13 +1,13 @@
 from password_gen_app.config.mysqlconnection import connectToMySQL
 from random import randint, shuffle
-
+from cryptography.fernet import Fernet
 db='password_generator_schema'
 
 class Password:
     def __init__(self, data):
         self.id = data['id']
         self.gen_password = data['gen_password']
-        self.key = data['key']
+        self.keygen = data['keygen']
         self.creator = data['users_id']
     
     @classmethod
@@ -20,7 +20,11 @@ class Password:
     def get_all_passwords(cls):
         query = 'SELECT * FROM passwords'
         results = connectToMySQL(db).query_db(query)
-        passwords = [cls(row) for row in results]
+        passwords = []
+        for row in results:
+            pass_gen=Fernet(row['keygen'])
+            row['gen_password']= pass_gen.decrypt(row['gen_password']).decode()
+            passwords.append(cls(row))
         return passwords
     
     @classmethod
