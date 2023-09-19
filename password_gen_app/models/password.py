@@ -1,27 +1,30 @@
 from password_gen_app.config.mysqlconnection import connectToMySQL
-from password_gen_app import app
-from flask import flash
 from random import randint, shuffle
-
+from cryptography.fernet import Fernet
 db='password_generator_schema'
 
 class Password:
     def __init__(self, data):
         self.id = data['id']
         self.gen_password = data['gen_password']
-        self.key = data['key']
+        self.keygen = data['keygen']
         self.creator = data['users_id']
     
     @classmethod
     def create_password(cls,data):
-        query = 'INSERT INTO passwords (gen_password, key, users_id) VALUE( %(gen_password)s, %(key)s, %(users_id)s)'
+        query = '''INSERT INTO passwords (gen_password, keygen, users_id) 
+        VALUE( %(gen_password)s, %(keygen)s, %(users_id)s)'''
         return connectToMySQL(db).query_db(query,data)
     
     @classmethod
     def get_all_passwords(cls):
         query = 'SELECT * FROM passwords'
         results = connectToMySQL(db).query_db(query)
-        passwords = [cls(row) for row in results]
+        passwords = []
+        for row in results:
+            pass_gen=Fernet(row['keygen'])
+            row['gen_password']= pass_gen.decrypt(row['gen_password']).decode()
+            passwords.append(cls(row))
         return passwords
     
     @classmethod
@@ -40,7 +43,7 @@ class Password:
     @staticmethod
     def create_character_list(param, character_list):
         import string
-        """This function creates a list called character list which determines the characters needed for each category
+        """This helper function creates a list called character list which determines the characters needed for each category
 
         Args:
             param (string): param is each string value from the list generated from request.form checkbox values
@@ -62,10 +65,10 @@ class Password:
 
     @staticmethod
     def populate_and_shuffle(values_list, character_list):
-        """This is a function that takes in several lists and creates a new list of strings that form the generated password.   
+        """This is a helper function that takes in several lists and creates a new list of strings that forms the generated password.   
 
         Args:
-            values_list (list): This is a list that declared on line 86. The values in the list are the number of instances in each category of the params.  
+            values_list (list): This is a list that declared on line 118. The values in the list are the number of instances in each category of the params.  
             character_list (list): The finished and completed return value from create_character_list on line 14. 
             counter(integer): A count to keep track of when to iterate the character_list to access the new list of string values.
             
@@ -78,25 +81,21 @@ class Password:
         for index in range(len(values_list)):
             for each_instance in range(values_list[index]):
                 random_index = randint(1,len(character_list[counter])-1)
-                print("random index", random_index)
                 password_generated.append(character_list[counter][random_index-1:random_index][0])
-                print(character_list[counter])
                 character_list[counter].pop(random_index-1)
-                print(character_list[counter])
-                print(password_generated)
                 shuffle(password_generated)
             counter+=1
-            print("Finished",password_generated)
         return "".join(password_generated)
 
 
     @staticmethod
     def password_generator(data,params_list):
-        """This function is the top most function that builds determines the number of characters for each category and builds the generated passwords with the helper functions.
+        """This function is the top most function that determines the number of characters for each category and builds the generated passwords with the helper functions.
 
         Args:
             data (request.form): form data
             params_list (list): Values from the checkbox selections 
+            num_of_each (dict): A dict that has params_list strings as keys and the value represents the number of each based off a percentage of the total password length.
 
         Returns:
             string: generated password
@@ -121,18 +120,14 @@ class Password:
                 num_of_each[param] = round(int(data['password_length']) * (percentages[index]))
                 character_list=Password.create_character_list(param,character_list)
         
-        print(num_of_each)
         values_list =[num_of_each[key] for key in num_of_each]
         if sum(values_list) == int(data['password_length']):
-            print("Equal", values_list)
             return Password.populate_and_shuffle(values_list,character_list) 
         elif sum(values_list) > int(data['password_length']):
-            values_list[randint(0,2)]-=1
-            print("value is greater",values_list)
+            values_list[randint(0,len(values_list)-2)]-=1
             return Password.populate_and_shuffle(values_list,character_list)
         else:
-            values_list[randint(0,2)]+=1
-            print("value is less",values_list)
+            values_list[randint(0,len(values_list)-2)]+=1
             return Password.populate_and_shuffle(values_list, character_list)
     
     
