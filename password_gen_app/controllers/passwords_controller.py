@@ -7,6 +7,8 @@ from ..models.user import User
 
 @app.route('/')
 def index():
+    if 'user_logged_id' in session:
+        redirect("/logged_in")
     
     if 'generated_password' in session:
         generated_password = session['generated_password']
