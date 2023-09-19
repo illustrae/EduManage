@@ -1,6 +1,4 @@
 from password_gen_app.config.mysqlconnection import connectToMySQL
-from password_gen_app import app
-from flask import flash
 from random import randint, shuffle
 
 db='password_generator_schema'
@@ -40,7 +38,7 @@ class Password:
     @staticmethod
     def create_character_list(param, character_list):
         import string
-        """This function creates a list called character list which determines the characters needed for each category
+        """This helper function creates a list called character list which determines the characters needed for each category
 
         Args:
             param (string): param is each string value from the list generated from request.form checkbox values
@@ -62,10 +60,10 @@ class Password:
 
     @staticmethod
     def populate_and_shuffle(values_list, character_list):
-        """This is a function that takes in several lists and creates a new list of strings that form the generated password.   
+        """This is a helper function that takes in several lists and creates a new list of strings that forms the generated password.   
 
         Args:
-            values_list (list): This is a list that declared on line 86. The values in the list are the number of instances in each category of the params.  
+            values_list (list): This is a list that declared on line 118. The values in the list are the number of instances in each category of the params.  
             character_list (list): The finished and completed return value from create_character_list on line 14. 
             counter(integer): A count to keep track of when to iterate the character_list to access the new list of string values.
             
@@ -87,7 +85,7 @@ class Password:
 
     @staticmethod
     def password_generator(data,params_list):
-        """This function is the top most function that builds determines the number of characters for each category and builds the generated passwords with the helper functions.
+        """This function is the top most function that determines the number of characters for each category and builds the generated passwords with the helper functions.
 
         Args:
             data (request.form): form data
@@ -121,10 +119,10 @@ class Password:
         if sum(values_list) == int(data['password_length']):
             return Password.populate_and_shuffle(values_list,character_list) 
         elif sum(values_list) > int(data['password_length']):
-            values_list[randint(0,2)]-=1
+            values_list[randint(0,len(values_list)-2)]-=1
             return Password.populate_and_shuffle(values_list,character_list)
         else:
-            values_list[randint(0,2)]+=1
+            values_list[randint(0,len(values_list)-2)]+=1
             return Password.populate_and_shuffle(values_list, character_list)
     
     
