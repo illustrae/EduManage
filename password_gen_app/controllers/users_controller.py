@@ -14,7 +14,7 @@ def register_user():
 @app.route('/processregister', methods=['POST'])
 def process_register():
     if User.registervalidator(request.form):
-        session['user_logged_in']=User.create(request.form)
+        session['user_logged_id']=User.create(request.form)
         return redirect('/logged_in')
     return redirect('/register')
 
@@ -26,6 +26,5 @@ def login():
 @app.route('/processlogin', methods=['POST'])
 def process_login():
     if User.loginvalidator(request.form):
-        session['user_logged_in']=User.create(request.form)
         return redirect('/logged_in')
     return redirect('/login')
