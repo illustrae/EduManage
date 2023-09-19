@@ -21,11 +21,7 @@ def generate_password():
     if 'user_logged_id' in session:
         key = Fernet.generate_key().decode()
         pass_gen=Fernet(key)
-        print("Generated Password", session['generated_password'])
-        encrypted_pw=pass_gen.encrypt(session['generated_password'].encode())
-        decrypted_pw = pass_gen.decrypt(encrypted_pw).decode()
-        print(encrypted_pw)
-        print(decrypted_pw)
+        
         data ={
             'gen_password': pass_gen.encrypt(session['generated_password'].encode()),
             'keygen': key,
