@@ -12,7 +12,8 @@ class Password:
     
     @classmethod
     def create_password(cls,data):
-        query = 'INSERT INTO passwords (gen_password, key, users_id) VALUE( %(gen_password)s, %(key)s, %(users_id)s)'
+        query = '''INSERT INTO passwords (gen_password, keygen, users_id) 
+        VALUE( %(gen_password)s, %(keygen)s, %(users_id)s)'''
         return connectToMySQL(db).query_db(query,data)
     
     @classmethod
