@@ -129,16 +129,5 @@ class Password:
         else:
             values_list[randint(0,len(values_list)-2)]+=1
             return Password.populate_and_shuffle(values_list, character_list)
-    
-    
-    # @classmethod
-    # def user_with_passwords(cls, data):
-    #     query = "SELECT * FROM passwords WHERE users_id = %(id)s;"
-    #     result = connectToMySQL(db).query_db(query, data)
-    #     passwords = []
-    #     for password in result:
-    #         passwords.append(cls(password))
-    #     return passwords
-    
-    
+
     

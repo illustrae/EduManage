@@ -35,6 +35,6 @@ def user_profile(id):
     data = {"id": id}
     id = session['user_logged_id']
     passwords = User.user_with_passwords(data)
-    print(passwords, data)
+    password_decrypt = Password.get_all_passwords()
     
     return render_template('profile.html', passwords=passwords)
