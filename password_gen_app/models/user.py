@@ -1,6 +1,7 @@
 from password_gen_app.config.mysqlconnection import connectToMySQL
 from password_gen_app import app
 import re
+from password_gen_app.models.password import Password
 from flask import flash,session
 from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt(app)
@@ -8,11 +9,13 @@ bcrypt = Bcrypt(app)
 db='password_generator_schema'
 class User:
     def __init__(self,data):
+        self.id = data['id']
         self.first_name = data['first_name']
         self.last_name = data['last_name']
         self.email = data['email']
         self.username = data['username']
         self.password = data['password']
+        self.generated_passwords = []
 
     @classmethod
     def create(cls, postData):
@@ -32,6 +35,23 @@ class User:
         query = f'SELECT * FROM users WHERE ID = {id}'
         result = connectToMySQL(db).query_db(query)
         return cls(result[0])
+    
+    @classmethod
+    def user_with_passwords(cls, data):
+        query = "SELECT * FROM users JOIN passwords ON users.id = passwords.users_id WHERE users.id = %(id)s;"
+        result = connectToMySQL(db).query_db(query, data)
+        user_passwords = cls(result[0])
+        for password in result:
+            if password['passwords.id'] == None:
+                break
+            data = {
+            "id": password['passwords.id'],
+            "gen_password": password['gen_password'],
+            "keygen": password['keygen'],
+            "users_id": password['users_id'], 
+            }
+            user_passwords.generated_passwords.append(Password(data))
+        return user_passwords
     
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
