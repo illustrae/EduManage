@@ -1,6 +1,7 @@
 from password_gen_app import app
 from flask import render_template, session, redirect, request
 from ..models.user import User
+from ..models.password import Password
 
 
 
@@ -26,3 +27,14 @@ def process_login():
     if User.loginvalidator(request.form):
         return redirect('/logged_in')
     return redirect('/login')
+
+@app.route('/profile/<int:id>')
+def user_profile(id):
+    if 'user_logged_id' not in session:
+        return redirect('/logout')
+    data = {"id": id}
+    id = session['user_logged_id']
+    passwords = User.user_with_passwords(data)
+    print(passwords, data)
+    
+    return render_template('profile.html', passwords=passwords)
