@@ -2,6 +2,7 @@ from password_gen_app.config.mysqlconnection import connectToMySQL
 from password_gen_app import app
 import re
 from password_gen_app.models.password import Password
+from cryptography.fernet import Fernet
 from flask import flash,session
 from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt(app)
@@ -42,6 +43,8 @@ class User:
         result = connectToMySQL(db).query_db(query, data)
         user_passwords = cls(result[0])
         for password in result:
+            pass_gen=Fernet(password['keygen'])
+            password['gen_password']= pass_gen.decrypt(password['gen_password']).decode()
             if password['passwords.id'] == None:
                 break
             data = {

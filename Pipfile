@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 python-decouple = "*"
 flask-bcrypt = "*"
+pymysql = "*"
+cryptography = "*"
 
 [dev-packages]
 
