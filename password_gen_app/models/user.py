@@ -39,22 +39,29 @@ class User:
     
     @classmethod
     def user_with_passwords(cls, data):
-        query = "SELECT * FROM users JOIN passwords ON users.id = passwords.users_id WHERE users.id = %(id)s;"
+        query = "SELECT * FROM users LEFT JOIN passwords ON users.id = passwords.users_id WHERE users.id = %(id)s;"
         result = connectToMySQL(db).query_db(query, data)
         user_passwords = cls(result[0])
-        for password in result:
-            pass_gen=Fernet(password['keygen'])
-            password['gen_password']= pass_gen.decrypt(password['gen_password']).decode()
-            if password['passwords.id'] == None:
-                break
-            data = {
-            "id": password['passwords.id'],
-            "gen_password": password['gen_password'],
-            "keygen": password['keygen'],
-            "users_id": password['users_id'], 
-            }
-            user_passwords.generated_passwords.append(Password(data))
+        if result[0]['keygen'] != None:
+            for password in result:
+                pass_gen=Fernet(password['keygen'])
+                password['gen_password']= pass_gen.decrypt(password['gen_password']).decode()
+                data = {
+                "id": password['passwords.id'],
+                "gen_password": password['gen_password'],
+                "keygen": password['keygen'],
+                "users_id": password['users_id'], 
+                }
+                user_passwords.generated_passwords.append(Password(data))
         return user_passwords
+    
+    @classmethod
+    def update_user_account(query, post_data, id):
+        data = { "id": id}
+        data|=post_data
+        query = "UPDATE users SET first_name=%(first_name)s, last_name=%(last_name)s, email=%(email)s, username=%(username)s WHERE id=%(id)s"
+        return connectToMySQL(db).query_db(query, data)
+
     
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
