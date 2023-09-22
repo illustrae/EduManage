@@ -33,10 +33,11 @@ def user_profile(id):
     if 'user_logged_id' not in session:
         return redirect('/logout')
     data = {"id": id}
-    passwords = User.user_with_passwords(data)
+    user = User.user_with_passwords(data)
     Password.get_all_passwords()
+    on_profile = True
     
-    return render_template('profile.html', passwords=passwords)
+    return render_template('profile.html', user=user, on_profile = on_profile)
 
 @app.route('/edit_account/<int:id>')
 def edit_account(id):
@@ -51,3 +52,18 @@ def update_account():
         return redirect('/logout')
     User.update_user_account(request.form, session['user_logged_id'])
     return redirect(f'/profile/{session["user_logged_id"]}')
+
+@app.route("/delete_account/<int:id>")
+def delete_account(id):
+    if 'user_logged_id' not in session:
+        return redirect('/logout')
+    data = {
+        "id": id
+    }
+    User.delete_user_account(data)
+    return redirect("/")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
