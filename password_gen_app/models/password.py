@@ -8,6 +8,8 @@ class Password:
         self.id = data['id']
         self.gen_password = data['gen_password']
         self.keygen = data['keygen']
+        self.created_at = data['created_at']
+        self.updated_at = data['updated_at']
         self.creator = data['users_id']
     
     @classmethod
