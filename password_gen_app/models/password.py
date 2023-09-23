@@ -13,7 +13,15 @@ class Password:
         self.creator = data['users_id']
     
     @classmethod
-    def create_password(cls,data):
+    def create_password(cls):
+        key = Fernet.generate_key().decode()
+        pass_gen=Fernet(key)
+        
+        data ={
+            'gen_password': pass_gen.encrypt(session['generated_password'].encode()),
+            'keygen': key,
+            'users_id': session['user_logged_id']
+        }
         query = '''INSERT INTO passwords (gen_password, keygen, users_id) 
         VALUE( %(gen_password)s, %(keygen)s, %(users_id)s)'''
         return connectToMySQL(db).query_db(query,data)

@@ -51,13 +51,15 @@ class User:
                 "gen_password": password['gen_password'],
                 "keygen": password['keygen'],
                 "users_id": password['users_id'], 
+                "created_at": password['created_at'],
+                "updated_at": password['updated_at']
                 }
                 user_passwords.generated_passwords.append(Password(data))
         return user_passwords
     
     @classmethod
-    def update_user_account(query, post_data, id):
-        data = { "id": id}
+    def update_user_account(cls, post_data):
+        data = { "id": session['user_logged_id']}
         data |= post_data
         query = "UPDATE users SET first_name=%(first_name)s, last_name=%(last_name)s, email=%(email)s, username=%(username)s WHERE id=%(id)s"
         return connectToMySQL(db).query_db(query, data)
@@ -68,7 +70,6 @@ class User:
         print(query)
         return connectToMySQL(db).query_db(query, data)
 
-    
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
     

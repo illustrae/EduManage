@@ -21,15 +21,7 @@ def generate_password():
     session['generated_password'] = Password.password_generator(request.form, request.form.getlist("params"))
 
     if 'user_logged_id' in session:
-        key = Fernet.generate_key().decode()
-        pass_gen=Fernet(key)
-        
-        data ={
-            'gen_password': pass_gen.encrypt(session['generated_password'].encode()),
-            'keygen': key,
-            'users_id': session['user_logged_id']
-        }
-        Password.create_password(data)
+        Password.create_password()
         return redirect('/logged_in')
     
     return redirect('/')
@@ -37,8 +29,6 @@ def generate_password():
 @app.route('/logged_in')
 def logged_main():
     if 'generated_password' in session and 'user_logged_id' in session:
-        generated_password = session['generated_password']
-        
-        return render_template('main_logged_in.html', generated_password = generated_password, user=User.get_one(session['user_logged_id']))
+        return render_template('main_logged_in.html', generated_password = session['generated_password'], user=User.get_one(session['user_logged_id']))
     else:
         return render_template('main_logged_in.html', user=User.get_one(session['user_logged_id']))
