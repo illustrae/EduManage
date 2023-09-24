@@ -67,7 +67,6 @@ class User:
     @classmethod
     def delete_user_account(cls, data):
         query = "DELETE FROM users WHERE id=%(id)s;"
-        print(query)
         return connectToMySQL(db).query_db(query, data)
 
     def full_name(self):
