@@ -41,6 +41,7 @@ class User:
     def user_with_passwords(cls, data):
         query = "SELECT * FROM users LEFT JOIN passwords ON users.id = passwords.users_id WHERE users.id = %(id)s;"
         result = connectToMySQL(db).query_db(query, data)
+        print(result)
         user_passwords = cls(result[0])
         if result[0]['keygen'] != None:
             for password in result:
@@ -51,8 +52,8 @@ class User:
                 "gen_password": password['gen_password'],
                 "keygen": password['keygen'],
                 "users_id": password['users_id'], 
-                "created_at": password['created_at'],
-                "updated_at": password['updated_at']
+                "created_at": password['passwords.created_at'],
+                "updated_at": password['passwords.updated_at']
                 }
                 user_passwords.generated_passwords.append(Password(data))
         return user_passwords
@@ -67,19 +68,18 @@ class User:
     @classmethod
     def delete_user_account(cls, data):
         query = "DELETE FROM users WHERE id=%(id)s;"
-        print(query)
         return connectToMySQL(db).query_db(query, data)
 
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
     
     @staticmethod
-    def registervalidator(postData):
+    def register_validator(postData):
         is_valid = True
         EMAIL_REGEX = re.compile('^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
         
         if len(postData['first_name']) < 3:
-            flash("First name should be at least 3 characters." , 'register')
+            flash("First name should be at least 3 characters.", 'register')
             is_valid = False 
         if len(postData['last_name']) < 3:
             flash("Last name should be at least 3 characters.", 'register')
@@ -101,7 +101,7 @@ class User:
         return is_valid
     
     @staticmethod
-    def loginvalidator(postData):
+    def login_validator(postData):
         is_valid = True
         query = "SELECT * FROM users WHERE username = %(username)s;"
         result = connectToMySQL(db).query_db(query,postData)

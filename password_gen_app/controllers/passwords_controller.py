@@ -18,6 +18,12 @@ def index():
 
 @app.route('/generate', methods=['POST'])
 def generate_password():
+    
+    if not Password.password_form_validator(request.form):
+        if 'user_logged_id' in session:
+            return redirect('/logged_in')
+        else:
+            return redirect('/')
     session['generated_password'] = Password.password_generator(request.form, request.form.getlist("params"))
 
     if 'user_logged_id' in session:
