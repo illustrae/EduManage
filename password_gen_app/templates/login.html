@@ -21,7 +21,7 @@
                 {% endfor %}
                 {% endif %}
                 {% endwith %}
-                <form action="/processlogin", method="POST">
+                <form action="/process_login", method="POST">
                     <div class="mb-3 ">
                         <label class= "form-label" for="username">Username: </label>
                         <input class="form-control" name="username" type="text">
@@ -45,7 +45,7 @@
                     <button type="button" class="btn-close text-reset text-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body bg-dark">
-                    <form action="/processregister", method="POST">
+                    <form action="/process_register", method="POST">
                         <h1 class="text-primary">Register</h1>
                         {% with messages = get_flashed_messages(category_filter=['register']) %}
                             {% if messages %}

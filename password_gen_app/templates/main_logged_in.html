@@ -33,6 +33,13 @@
         {% block content %}
 
         <div class="row">
+            {% with messages = get_flashed_messages(category_filter=['password_form']) %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <p class="text-danger">{{message}}</p>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
             <form action="/generate" method="POST">
 
                 <div class="mb-3">

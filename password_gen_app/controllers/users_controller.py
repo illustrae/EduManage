@@ -10,21 +10,20 @@ def register_user():
 
     return render_template('register.html')
 
-@app.route('/processregister', methods=['POST'])
+@app.route('/process_register', methods=['POST'])
 def process_register():
-    if User.registervalidator(request.form):
+    if User.register_validator(request.form):
         session['user_logged_id']=User.create(request.form)
         return redirect('/logged_in')
     return redirect('/register')
 
 @app.route('/login')
 def login():
-
     return render_template('login.html')
 
-@app.route('/processlogin', methods=['POST'])
+@app.route('/process_login', methods=['POST'])
 def process_login():
-    if User.loginvalidator(request.form):
+    if User.login_validator(request.form):
         return redirect('/logged_in')
     return redirect('/login')
 
@@ -32,14 +31,13 @@ def process_login():
 def user_profile(id):
     if 'user_logged_id' not in session:
         return redirect('/logout')
-    return render_template('profile.html', user=User.user_with_passwords({"id": id}))
+    return render_template('profile.html', user=User.user_with_passwords({"id": id}),on_profile = True)
 
 @app.route('/edit_account/<int:id>')
 def edit_account(id):
     if 'user_logged_id' not in session:
         return redirect('/logout')
-    user = User.get_one(id)
-    return render_template('editAccount.html', user = user)
+    return render_template('editAccount.html', user = User.get_one(id))
 
 @app.route('/update_account', methods=['POST'] )
 def update_account():

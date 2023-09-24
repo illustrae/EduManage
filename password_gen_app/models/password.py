@@ -1,6 +1,8 @@
 from password_gen_app.config.mysqlconnection import connectToMySQL
 from random import randint, shuffle
 from cryptography.fernet import Fernet
+from flask import flash
+
 db='password_generator_schema'
 
 class Password:
@@ -49,6 +51,23 @@ class Password:
         query = f'SELECT * FROM passwords WHERE ID = {id}'
         return connectToMySQL(db).query_db(query)
 
+    @staticmethod
+    def password_form_validator(post_data):
+        print(post_data)
+        is_valid = True
+        if len(post_data.getlist("params")) < 2:
+            flash("Please select at least 2 conditions for your password.", "password_form")
+            is_valid = False
+        if post_data['password_length'] == '':
+            flash("Password length can't be empty.", "password_form")
+            is_valid = False
+        elif int(post_data['password_length']) < 8:
+            flash("Password length should be at least be 8 characters long.", "password_form")
+            is_valid = False
+        
+        return is_valid
+            
+        
     
     @staticmethod
     def create_character_list(param, character_list):
@@ -100,7 +119,7 @@ class Password:
 
     @staticmethod
     def password_generator(data,params_list):
-        """This function is the top most function that determines the number of characters for each category and builds the generated passwords with the helper functions.
+        """This function is the top most function for password generation that determines the number of characters for each category and builds the generated passwords with the helper functions.
 
         Args:
             data (request.form): form data

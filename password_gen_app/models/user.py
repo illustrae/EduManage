@@ -74,12 +74,12 @@ class User:
         return f'{self.first_name} {self.last_name}'
     
     @staticmethod
-    def registervalidator(postData):
+    def register_validator(postData):
         is_valid = True
         EMAIL_REGEX = re.compile('^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
         
         if len(postData['first_name']) < 3:
-            flash("First name should be at least 3 characters." , 'register')
+            flash("First name should be at least 3 characters.", 'register')
             is_valid = False 
         if len(postData['last_name']) < 3:
             flash("Last name should be at least 3 characters.", 'register')
@@ -101,7 +101,7 @@ class User:
         return is_valid
     
     @staticmethod
-    def loginvalidator(postData):
+    def login_validator(postData):
         is_valid = True
         query = "SELECT * FROM users WHERE username = %(username)s;"
         result = connectToMySQL(db).query_db(query,postData)
