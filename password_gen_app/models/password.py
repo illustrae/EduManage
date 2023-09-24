@@ -1,7 +1,7 @@
 from password_gen_app.config.mysqlconnection import connectToMySQL
 from random import randint, shuffle
 from cryptography.fernet import Fernet
-from flask import flash
+from flask import flash,session
 
 db='password_generator_schema'
 
@@ -53,7 +53,14 @@ class Password:
 
     @staticmethod
     def password_form_validator(post_data):
-        print(post_data)
+        """This is a password validator for the password generation form.
+
+        Args:
+            post_data (dict): POST data that has the user's input information.
+
+        Returns:
+            Boolean: If this returns False validation fails and displays messages.
+        """
         is_valid = True
         if len(post_data.getlist("params")) < 2:
             flash("Please select at least 2 conditions for your password.", "password_form")
@@ -81,9 +88,9 @@ class Password:
         Returns:
             list of lists that contains strings
         """    
-        
+        special_list = ['!', '^', '#', '*', '%', '$', '&', '@']
         if param == "special":
-            character_list.append(list(string.punctuation))
+            character_list.append(special_list)
         elif param =="number":
             character_list.append(list(string.digits))
         elif param =="lowercase":
