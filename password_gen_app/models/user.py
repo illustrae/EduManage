@@ -41,6 +41,7 @@ class User:
     def user_with_passwords(cls, data):
         query = "SELECT * FROM users LEFT JOIN passwords ON users.id = passwords.users_id WHERE users.id = %(id)s;"
         result = connectToMySQL(db).query_db(query, data)
+        print(result)
         user_passwords = cls(result[0])
         if result[0]['keygen'] != None:
             for password in result:
@@ -51,8 +52,8 @@ class User:
                 "gen_password": password['gen_password'],
                 "keygen": password['keygen'],
                 "users_id": password['users_id'], 
-                "created_at": password['created_at'],
-                "updated_at": password['updated_at']
+                "created_at": password['passwords.created_at'],
+                "updated_at": password['passwords.updated_at']
                 }
                 user_passwords.generated_passwords.append(Password(data))
         return user_passwords
