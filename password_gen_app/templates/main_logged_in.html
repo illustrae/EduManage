@@ -11,28 +11,27 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 
-<body>
-    <div class="container-lg">
-        <div class="d-flex flex-row-reverse m-3">
-            <a class="mx-1" href="/register"><button>Register</button></a>
+<body class="bg-dark text-white">
+ <div class="navbar d-flex flex-row-reverse p-2 custom-bg-darker">
             {% if session['user_logged_id']%}
-            <a class="mx-1" href="/logout"><button>Logout</button></a>
+            <a class="mx-1" href="/logout"><button type="button" class="btn btn-outline-primary">Logout</button></a>
             {% else %}
-            <a class="mx-1" href="/login"><button>Login</button></a>
+            <a class="mx-1" href="/login"><button type="button" class="btn btn-outline-primary">Login</button></a>
             {% endif %}
 
             {% if on_profile == True %}
-            <a href="/logged_in"><button>+ New Password</button></a>
+            <a href="/logged_in"><button type="button" class="btn btn-outline-primary" >+ New Password</button></a>
             {% else %}
-            <a class="mx-1" href="/profile/{{user.id}}"><button>Profile</button></a>
+            <a class="mx-1" href="/profile/{{user.id}}"><button type="button" class="btn btn-outline-primary">Profile</button></a>
             {% endif %}
-            <h3 class="me-auto">Hello, {{user.full_name()}}!</h3>
+            <h3 class="me-auto">Hello, <span class="text-success">{{user.username}}</span>!</h3>
         </div>
-
-
+    <div class="container-fluid">
         {% block content %}
 
-        <div class="row">
+ <div class="row text-center">
+            <p class="mt-5"> Generated Password:</p>
+            <p class="text-success fs-2 fw-bold">{{generated_password}}</p>
             {% with messages = get_flashed_messages(category_filter=['password_form']) %}
                 {% if messages %}
                     {% for message in messages %}
@@ -40,48 +39,50 @@
                     {% endfor %}
                 {% endif %}
             {% endwith %}
-            <form action="/generate" method="POST">
-
-                <div class="mb-3">
-                    <label class="form-label" for="">{{generated_password}}</label>
-                    <div class="mb-3">
-                        <label class="form-label" for="">Length:</label>
-                        <input class="rounded-3 col-1" name="password_length" type="text">
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="special" id="flexCheckDefault"
-                            name="params">
-                        <label class="form-check-label" for="flexCheckDefault" value="special">
-                            Special Characters
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="lowercase" id="flexCheckChecked"
-                            name="params">
-                        <label class="form-check-label" for="flexCheckChecked" value="lowercase">
-                            Lowercase
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="capital" id="flexCheckChecked"
-                            name="params">
-                        <label class="form-check-label" for="flexCheckChecked" value="capitals">
-                            Capitals
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="number" id="flexCheckChecked"
-                            name="params">
-                        <label class="form-check-label" for="flexCheckChecked" value="numbers">
-                            Numbers
-                        </label>
-                    </div>
-                    <div class="mb-3">
-                        <button class="btn btn-warning mb-3">Submit</button>
-                    </div>
+        </div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-12 d-flex justify-content-center">
+                    <form action="/generate" method="POST">
+                        <div class="mb-3">
+                            <label class="form-label" for="">Length:</label>
+                            <input class="rounded-3 col-6" name="password_length" type="text">
+                        </div>
+                        <div class="checkbox-row text-start m-3">
+                            <input class="form-check-input" type="checkbox" value="special" id="flexCheckDefault"
+                                name="params">
+                            <label class="form-check-label" for="flexCheckDefault" value="special">
+                                Special Characters
+                            </label>
+                        </div>
+                        <div class="checkbox-row text-start m-3">
+                            <input class="form-check-input" type="checkbox" value="lowercase" id="flexCheckChecked"
+                                name="params">
+                            <label class="form-check-label" for="flexCheckChecked" value="lowercase">
+                                Lowercase
+                            </label>
+                        </div>
+                        <div class="checkbox-row text-start m-3">
+                            <input class="form-check-input" type="checkbox" value="capital" id="flexCheckChecked1"
+                                name="params">
+                            <label class="form-check-label" for="flexCheckChecked1" value="capitals">
+                                Capitals
+                            </label>
+                        </div>
+                        <div class="checkbox-row text-start m-3">
+                            <input class="form-check-input" type="checkbox" value="number" id="flexCheckChecked2"
+                                name="params">
+                            <label class="form-check-label" for="flexCheckChecked2" value="numbers">
+                                Numbers
+                            </label>
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-warning m-3 mx-auto">Submit</button>
+                        </div>
+                    </form>
+                    
                 </div>
-
-            </form>
+            </div>
         </div>
     </div>
 </body>

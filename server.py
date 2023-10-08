@@ -5,6 +5,5 @@ from flaskwebgui import FlaskUI
 
 
 if __name__ =='__main__':
-     FlaskUI(app=app, server="flask", width=500, height=500).run()
-    # app.run(debug=True)
-    
+     # FlaskUI(app=app, server="flask", width=1000, height=500).run()
+    app.run(debug=True)
