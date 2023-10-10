@@ -8,6 +8,7 @@ flask = "*"
 pymysql = "*"
 flaskwebgui = "*"
 python-dotenv = "*"
+pyautogui = "*"
 
 [dev-packages]
 

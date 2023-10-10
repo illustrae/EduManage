@@ -2,6 +2,7 @@ from password_gen_app import app
 from flask import render_template, session, redirect, request
 from ..models.user import User
 from ..models.password import Password
+from flaskwebgui import FlaskUI, close_application
 
 
 
@@ -57,3 +58,10 @@ def delete_account(id):
 def logout():
     session.clear()
     return redirect("/")
+
+# @app.route('/close')
+# def close():
+#     with pyautogui_lock:
+#         close_application()
+
+#     return "Application closed"
