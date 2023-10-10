@@ -2,17 +2,17 @@
 {% block content %}
 
 <body>
+  <div class="row text-center m-5">
+    <p>Name: {{ user.full_name() }}</p>
+    <p>Email: {{ user.email }} </p>
+    <div class="row">
+        <a href="/edit_account/{{user.id}}">
+          <button type="button" class="button-top-info btn btn-outline-info">Edit Account Info</button>
+        </a>
+      </div>
+  </div>
 
-  <p>{{ user.username }}</p>
-  <p>{{ user.full_name() }}</p>
-  <p>{{ user.email }} </p>
-  <a href="/edit_account/{{user.id}}"><button>Edit Account Info</button></a>
-  <form method="get" action="/delete_account/{{user.id}}"
-    onsubmit="return confirm('Are you sure you want to delete your account?');">
-    <button type="submit">Delete Account</button>
-  </form>
-
-  <table>
+  <table class="table table-dark table-striped">
     <thead>
       <tr>
         <th>Password ID</th>
@@ -28,9 +28,14 @@
         <td>{{ password_obj.gen_password }}</td>
         <td>{{ password_obj.created_at.strftime('%B %d, %Y')}}</td>
         <!-- Add other password attributes here -->
-      </tr>
+      </tr> 
       {% endfor %}
     </tbody>
   </table>
+
+  <form class="text-center m-5" method="get" action="/delete_account/{{user.id}}"
+          onsubmit="return confirm('Are you sure you want to delete your account?');">
+    <button type="submit" class="button-delete btn btn-outline-danger">Delete Account</button>
+  </form>
 </body>
 {% endblock content %}
