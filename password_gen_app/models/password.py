@@ -68,7 +68,7 @@ class Password:
         if post_data['password_length'] == '':
             flash("Password length can't be empty.", "password_form")
             is_valid = False
-        elif len(post_data['password_length']) < 8:
+        elif int(post_data['password_length']) < 8:
             flash("Password length should be at least be 8 characters long.", "password_form")
             is_valid = False
         return is_valid

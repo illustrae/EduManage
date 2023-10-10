@@ -32,9 +32,9 @@ class User:
         return connectToMySQL(db).query_db(query,data)
     
     @classmethod
-    def get_one(cls,id):
-        query = f'SELECT * FROM users WHERE ID = {id}'
-        result = connectToMySQL(db).query_db(query)
+    def get_one(cls,data):
+        query = 'SELECT * FROM users WHERE ID = %(id)s'
+        result = connectToMySQL(db).query_db(query, data)
         return cls(result[0])
     
     @classmethod
@@ -73,44 +73,63 @@ class User:
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
     
+    @classmethod
+    def if_user_info_exist(cls,key, data):
+        query = f'''SELECT * FROM users 
+        WHERE {key} = %(email)s;'''
+        return connectToMySQL(db).query_db(query,data)
+    
     @staticmethod
-    def register_validator(postData):
+    def profile_validator(postData):
         is_valid = True
-        EMAIL_REGEX = re.compile('^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
-        
-        if len(postData['first_name']) < 3:
-            flash("First name should be at least 3 characters.", 'register')
-            is_valid = False 
-        if len(postData['first_name']) < 76:
-            flash("First name should be 75 characters or less.", 'register')
-            is_valid = False 
-        if len(postData['last_name']) < 3:
-            flash("Last name should be at least 3 characters.", 'register')
-            is_valid = False
-        if len(postData['last_name']) < 76:
-            flash("Last name should be 75 characters or less.", 'register')
-            is_valid = False
-        if not EMAIL_REGEX.match(postData['email']):
-            flash("Invalid email address format!", 'register')
-            is_valid = False
-        elif len(postData['email']) < 256:
-            flash("Please shorten your email or try another email!", 'register')
-            is_valid = False
-        if len(postData['username']) <= 5:
-            flash("Username should be at least 6 characters.", 'register')
-            is_valid = False
-        elif len(postData['username']) < 26:
-            flash("Username should be 25 characters or less.", 'register')
-            is_valid = False
-        if  0 <= len(postData['password']) <= 7:
-            flash("Password needs to be at least 8 characters.", 'register')
-            is_valid = False
-        elif len(postData['password']) < 91:
-            flash("Password needs to be 90 characters or less.", 'register')
-            is_valid = False
-        elif postData['c_password'] != postData['password']:
-            flash("Passwords do not match!", 'register')
-            is_valid = False
+        if 'first_name' in postData:
+            EMAIL_REGEX = re.compile('^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
+            
+            if len(postData['first_name']) < 3:
+                flash("First name should be at least 3 characters.", 'register')
+                is_valid = False 
+            if len(postData['first_name']) > 75:
+                flash("First name should be 75 characters or less.", 'register')
+                is_valid = False 
+            if len(postData['last_name']) < 3:
+                flash("Last name should be at least 3 characters.", 'register')
+                is_valid = False
+            if len(postData['last_name']) > 75:
+                flash("Last name should be 75 characters or less.", 'register')
+                is_valid = False
+            # email_exist=User.if_user_info_exist('email',{'email':postData['email']})
+            if not EMAIL_REGEX.match(postData['email']):
+                flash("Invalid email address format!", 'register')
+                is_valid = False
+            elif len(postData['email']) > 255:
+                flash("Please shorten your email or try another email!", 'register')
+                is_valid = False
+            # elif not email_exist:
+            #     flash("Email already taken.", 'register')
+            #     is_valid = False
+            # username_exist=User.if_user_info_exist('username',{'username': postData['username']})
+            if len(postData['username']) <= 5:
+                flash("Username should be at least 6 characters.", 'register')
+                is_valid = False
+            elif len(postData['username']) > 25:
+                flash("Username should be 25 characters or less.", 'register')
+                is_valid = False
+            # elif not username_exist:
+            #     flash("Username already taken.", 'register')
+            #     is_valid = False
+            if is_valid:
+                flash("Profile Successfully Changed!", 'register')
+        if 'password' in postData:
+            if  0 <= len(postData['password']) <= 7:
+                flash("Password needs to be at least 8 characters.", 'register')
+                is_valid = False
+            elif len(postData['password']) > 90:
+                flash("Password needs to be 90 characters or less.", 'register')
+                is_valid = False
+            elif postData['c_password'] != postData['password']:
+                flash("Passwords do not match!", 'register')
+                is_valid = False
+            
         return is_valid
     
     @staticmethod
@@ -129,4 +148,39 @@ class User:
             flash("Username/Password doesn't match.", "login")
             return is_valid
         session['user_logged_id']= user['id']
+        return is_valid
+    
+    @staticmethod
+    def password_validator(postData):
+        is_valid = True
+        if 'new_password' in postData:
+            if postData['old_password'] == '':
+                flash("Please input your old password.", "profile")
+                is_valid = False
+            if postData['new_password'] == '':
+                flash("Please input your new password.", "profile")
+                is_valid = False
+            elif len(postData['new_password']) < 7:
+                flash("New password needs to be 8 characters or more.", "profile")
+                is_valid = False
+            user = User.get_one({'id':session['user_logged_id']})
+            if not bcrypt.check_password_hash(user.password, postData['old_password']):
+                is_valid = False
+                flash("Password is incorrect.", "profile")
+                return is_valid
+            elif len(postData['new_password']) > 90:
+                print(len(postData['new_password']))
+                flash("Password needs to be 90 characters or less.", 'profile')
+                is_valid = False
+            elif postData['c_password'] != postData['new_password']:
+                flash("Passwords do not match!", 'profile')
+                is_valid = False
+            if is_valid:
+                flash("Password Successfully Changed!", 'profile')
+                data={
+                    'password': bcrypt.generate_password_hash(postData['new_password']),
+                    'id': session['user_logged_id']
+                    }
+                query = 'UPDATE users SET password = %(password)s WHERE id = %(id)s'
+                connectToMySQL(db).query_db(query,data)
         return is_valid

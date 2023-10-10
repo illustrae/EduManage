@@ -35,6 +35,6 @@ def generate_password():
 @app.route('/logged_in')
 def logged_main():
     if 'generated_password' in session and 'user_logged_id' in session:
-        return render_template('main_logged_in.html', generated_password = session['generated_password'], user=User.get_one(session['user_logged_id']))
+        return render_template('main_logged_in.html', generated_password = session['generated_password'], user=User.get_one({'id':session['user_logged_id']}))
     else:
-        return render_template('main_logged_in.html', user=User.get_one(session['user_logged_id']))
+        return render_template('main_logged_in.html', user=User.get_one({'id':session['user_logged_id']}))

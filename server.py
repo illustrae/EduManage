@@ -5,5 +5,5 @@ import pyautogui
 
 
 if __name__ =='__main__':
-     FlaskUI(app=app, server="flask", width=800, height=500).run()
-#     app.run(debug=True)
+     # FlaskUI(app=app, server="flask", width=800, height=500).run()
+     app.run(debug=True)
