@@ -15,11 +15,11 @@
             <div class="col-4 custom-bg-darker rounded-3">
                 <h1 class="text-success">Login</h1>
                 {% with messages = get_flashed_messages(category_filter=['login']) %}
-                {% if messages %}
-                {% for message in messages %}
-                <p class="text-black bg-warning">{{message}}</p>
-                {% endfor %}
-                {% endif %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <p class="text-black bg-warning">{{message}}</p>
+                        {% endfor %}
+                    {% endif %}
                 {% endwith %}
                 <form action="/process_login", method="POST">
                     <div class="mb-3 ">

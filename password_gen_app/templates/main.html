@@ -12,15 +12,21 @@
 </head>
 
 <body class="bg-dark text-white">
-    <div class="container-fluid">
-        <div class="d-flex flex-row-reverse p-2 custom-bg-darker col-lg-6 mx-auto text-end">
-            <a class="mx-1" href="/login"><button type="button" class="btn btn-outline-primary">Login</button></a>
-            <a class="mx-1" href="/register"><button type="button" class="btn btn-outline-primary">Register</button></a>
-            <h3 class="me-auto"><span class="text-danger">Password</span> <span class="text-warning">Generator</span></h3>
-        </div>
-        <div class="container-fluid ">
+    <div class="mx-auto">
+        <div class="navbar d-flex flex-column-reverse flex-sm-row-reverse p-2 custom-bg-darker col-lg-6 mx-auto text-end">
+            <div class="d-flex justify-content-center">
+                <a class="mx-1" href="/register"><button type="button" class="btn btn-outline-primary">Register</button></a>	
+                <a class="mx-1" href="/login"><button type="button" class="btn btn-outline-primary">Login</button></a>	            
+            </div>
+            <h3 class="me-sm-auto">
+                <span class="text-danger">Password</span> 
+                <span class="text-warning">Generator</span>
+            </h3>
+        </div>	       
+        <div class="container col-xxl-6 ">
+
             <div class="row text-center">
-                <p class="mt-5 custom-res-font-size"> Generated Password:</p>
+                <p class="mt-5"> Generated Password:</p>
                 <p class="text-success fs-2 fw-bold custom-bg-darker">{{generated_password}}</p>
                 <div class="d-sm-block d-md-none">
                     {% with messages = get_flashed_messages(category_filter=['password_form']) %}
@@ -34,8 +40,8 @@
                     {% endwith %}
                 </div>
             </div>
-            <div class="container d-flex flex-column justify-content-center flex-md-row">
-                <div class="col-lg-3 mx-sm-5">
+            <div class="container d-flex flex-column flex-md-row col-12">
+                <div class="col-lg-6 mx-sm-5">
                     <form action="/generate" method="POST">
                         <div class="m-3">
                             <label class="form-label" for="">Password Length:</label>
@@ -72,6 +78,7 @@
                         <div class="m-3">
                             <button class="btn btn-warning m-3 mx-auto">Submit</button>
                         </div>
+                        <p class="custom-font-size"> Want to save your passwords? Please register an account.</p>
                     </form>
                 </div>
                 <div class="border border-1 col-sm-3 d-sm-block d-md-none">
@@ -81,7 +88,7 @@
                         <li>Use numbers, symbols, and upper- and lowercase letters in random order.</li>
                     </ul>
                 </div>
-                <div class="border border-1 col-lg-3 col-md-3 col-sm-3 d-none d-md-block d-flex flex-column h-100 w-50 my-4">
+                <div class="border border-1 col-3 d-none d-md-block d-flex flex-column h-100 my-4 col-lg-3 mx-sm-5">
                     {% with messages = get_flashed_messages(category_filter=['password_form']) %}
                         {% if messages %}
                             <ul class="ps-4 m-0">
@@ -103,7 +110,6 @@
             </div>
         </div>
     </div>
-    <a href="/close" class="exit" role="button"> Close</a>
 </body>
 
 </html>
