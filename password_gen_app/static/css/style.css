@@ -4,6 +4,7 @@
 .custom-font-size {
     font-size: 10px;
 }
+
 th {
     background-color: #111111 !important;
 }
@@ -15,5 +16,8 @@ table{
 .button-delete, .button-top-info{
     display: inline-block !important;
     vertical-align:top;
+}
+.custom-res-font-size {
+    font-size: 1rem;
 
 }

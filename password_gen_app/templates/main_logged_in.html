@@ -12,75 +12,104 @@
 </head>
 
 <body class="bg-dark text-white">
- <div class="navbar d-flex flex-row-reverse p-2 custom-bg-darker">
-            {% if session['user_logged_id']%}
-            <a class="mx-1" href="/logout"><button type="button" class="btn btn-outline-primary">Logout</button></a>
-            {% else %}
-            <a class="mx-1" href="/login"><button type="button" class="btn btn-outline-primary">Login</button></a>
-            {% endif %}
-
-            {% if on_profile == True %}
-            <a href="/logged_in"><button type="button" class="btn btn-outline-primary" >+ New Password</button></a>
-            {% else %}
+    <div class="navbar d-flex flex-md-row p-2 custom-bg-darker col-lg-6 mx-auto">
+        <h3 class="me-auto">Hello, <span class="text-success">{{user.username}}</span>!</h3>
+        
+        {% if on_profile == True %}
+            <a href="/logged_in"><button type="button" class="btn btn-outline-primary" >+ Generate</button></a>
+        {% else %}
             <a class="mx-1" href="/profile/{{user.id}}"><button type="button" class="btn btn-outline-primary">Profile</button></a>
-            {% endif %}
-            <h3 class="me-auto">Hello, <span class="text-success">{{user.username}}</span>!</h3>
-        </div>
-    <div class="container-fluid">
+        {% endif %}
+
+        {% if session['user_logged_id']%}
+            <a class="mx-1" href="/logout"><button type="button" class="btn btn-outline-primary">Logout</button></a>
+        {% else %}
+            <a class="mx-1" href="/login"><button type="button" class="btn btn-outline-primary">Login</button></a>
+        {% endif %}
+    </div>
+    <div class="container-fluid ">
+
         {% block content %}
 
- <div class="row text-center">
+        <div class="row text-center">
             <p class="mt-5"> Generated Password:</p>
-            <p class="text-success fs-2 fw-bold">{{generated_password}}</p>
-            {% with messages = get_flashed_messages(category_filter=['password_form']) %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <p class="text-danger">{{message}}</p>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+            <p class="text-success fs-2 fw-bold custom-bg-darker">{{generated_password}}</p>
+            <div class="d-sm-block d-md-none">
+                {% with messages = get_flashed_messages(category_filter=['password_form']) %}
+                    {% if messages %}
+                        <ul class="ps-4 m-0">
+                            {% for message in messages %}
+                                <li class="text-danger text-start">{{message}}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+            </div>
         </div>
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-12 d-flex justify-content-center">
-                    <form action="/generate" method="POST">
-                        <div class="mb-3">
-                            <label class="form-label" for="">Length:</label>
-                            <input class="rounded-3 col-6" name="password_length" type="text">
-                        </div>
-                        <div class="checkbox-row text-start m-3">
-                            <input class="form-check-input" type="checkbox" value="special" id="flexCheckDefault"
-                                name="params">
-                            <label class="form-check-label" for="flexCheckDefault" value="special">
-                                Special Characters
-                            </label>
-                        </div>
-                        <div class="checkbox-row text-start m-3">
-                            <input class="form-check-input" type="checkbox" value="lowercase" id="flexCheckChecked"
-                                name="params">
-                            <label class="form-check-label" for="flexCheckChecked" value="lowercase">
-                                Lowercase
-                            </label>
-                        </div>
-                        <div class="checkbox-row text-start m-3">
-                            <input class="form-check-input" type="checkbox" value="capital" id="flexCheckChecked1"
-                                name="params">
-                            <label class="form-check-label" for="flexCheckChecked1" value="capitals">
-                                Capitals
-                            </label>
-                        </div>
-                        <div class="checkbox-row text-start m-3">
-                            <input class="form-check-input" type="checkbox" value="number" id="flexCheckChecked2"
-                                name="params">
-                            <label class="form-check-label" for="flexCheckChecked2" value="numbers">
-                                Numbers
-                            </label>
-                        </div>
-                        <div class="text-center">
-                            <button class="btn btn-warning m-3 mx-auto">Submit</button>
-                        </div>
-                    </form>
-                    
+        <div class="container d-flex flex-column justify-content-center flex-md-row">
+            <div class="col-lg-3 mx-sm-5">
+                <form action="/generate" method="POST">
+                    <div class="m-3">
+                        <label class="form-label" for="">Password Length:</label>
+                        <input class="rounded-3 col-2" name="password_length" type="text">
+                    </div>
+                    <div class="checkbox-row text-start m-3">
+                        <input class="form-check-input" type="checkbox" value="special" id="flexCheckDefault"
+                            name="params">
+                        <label class="form-check-label" for="flexCheckDefault" value="special">
+                            Special Characters
+                        </label>
+                    </div>
+                    <div class="checkbox-row text-start m-3">
+                        <input class="form-check-input" type="checkbox" value="lowercase" id="flexCheckChecked"
+                            name="params">
+                        <label class="form-check-label" for="flexCheckChecked" value="lowercase">
+                            Lowercase
+                        </label>
+                    </div>
+                    <div class="checkbox-row text-start m-3">
+                        <input class="form-check-input" type="checkbox" value="capital" id="flexCheckChecked1"
+                            name="params">
+                        <label class="form-check-label" for="flexCheckChecked1" value="capitals">
+                            Capitals
+                        </label>
+                    </div>
+                    <div class="checkbox-row text-start m-3">
+                        <input class="form-check-input" type="checkbox" value="number" id="flexCheckChecked2"
+                            name="params">
+                        <label class="form-check-label" for="flexCheckChecked2" value="numbers">
+                            Numbers
+                        </label>
+                    </div>
+                    <div class="m-3">
+                        <button class="btn btn-warning m-3 mx-auto">Submit</button>
+                    </div>
+                </form>
+            </div>
+            <div class="border border-1 col-sm-3 d-sm-block d-md-none">
+                <p class="custom-res-font-size m-0 text-warning ps-2">Password Suggestions:</p>
+                <ul class="custom-res-font-size ps-4 m-0">
+                    <li>Strong passwords should at least be 12 characters long (the longer, the better).</li>
+                    <li>Use numbers, symbols, and upper- and lowercase letters in random order.</li>
+                </ul>
+            </div>
+            <div class="border border-1 col-3 d-none d-md-block d-flex flex-column h-100 w-50 my-4">
+                {% with messages = get_flashed_messages(category_filter=['password_form']) %}
+                    {% if messages %}
+                        <ul class="ps-4 m-0">
+                            {% for message in messages %}
+                                <li class="text-danger">{{message}}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+                
+                <div>
+                    <p class="custom-res-font-size m-0 text-warning ps-2">Password Suggestions:</p>
+                    <ul class="custom-res-font-size ps-4 m-0">
+                        <li>Strong passwords should at least be 12 characters long (the longer, the better).</li>
+                        <li>Use numbers, symbols, and upper- and lowercase letters in random order.</li>
+                    </ul>
                 </div>
             </div>
         </div>

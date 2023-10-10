@@ -3,7 +3,8 @@ from flask import render_template, session, redirect, request
 from ..models.user import User
 from ..models.password import Password
 from flaskwebgui import FlaskUI, close_application
-
+from flask_socketio import SocketIO
+socketio = SocketIO(app)
 
 
 @app.route('/register')
@@ -65,3 +66,8 @@ def logout():
 #         close_application()
 
 #     return "Application closed"
+
+@socketio.on('disconnect')
+def disconnect_user():
+    session.pop('generated_password', None)
+

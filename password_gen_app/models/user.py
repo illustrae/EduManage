@@ -39,7 +39,7 @@ class User:
     
     @classmethod
     def user_with_passwords(cls, data):
-        query = "SELECT * FROM users LEFT JOIN passwords ON users.id = passwords.users_id WHERE users.id = %(id)s;"
+        query = "SELECT * FROM users LEFT JOIN passwords ON users.id = passwords.users_id WHERE users.id = %(id)s ORDER BY passwords.created_at desc;"
         result = connectToMySQL(db).query_db(query, data)
         print(result)
         user_passwords = cls(result[0])
@@ -81,23 +81,36 @@ class User:
         if len(postData['first_name']) < 3:
             flash("First name should be at least 3 characters.", 'register')
             is_valid = False 
+        if len(postData['first_name']) < 76:
+            flash("First name should be 75 characters or less.", 'register')
+            is_valid = False 
         if len(postData['last_name']) < 3:
             flash("Last name should be at least 3 characters.", 'register')
+            is_valid = False
+        if len(postData['last_name']) < 76:
+            flash("Last name should be 75 characters or less.", 'register')
             is_valid = False
         if not EMAIL_REGEX.match(postData['email']):
             flash("Invalid email address format!", 'register')
             is_valid = False
+        elif len(postData['email']) < 256:
+            flash("Please shorten your email or try another email!", 'register')
+            is_valid = False
         if len(postData['username']) <= 5:
             flash("Username should be at least 6 characters.", 'register')
+            is_valid = False
+        elif len(postData['username']) < 26:
+            flash("Username should be 25 characters or less.", 'register')
             is_valid = False
         if  0 <= len(postData['password']) <= 7:
             flash("Password needs to be at least 8 characters.", 'register')
             is_valid = False
+        elif len(postData['password']) < 91:
+            flash("Password needs to be 90 characters or less.", 'register')
+            is_valid = False
         elif postData['c_password'] != postData['password']:
             flash("Passwords do not match!", 'register')
             is_valid = False
-        if is_valid:
-            flash('Successfully registered!', 'register')
         return is_valid
     
     @staticmethod
