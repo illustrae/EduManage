@@ -1,9 +1,8 @@
 from password_gen_app import app
 from flask import render_template, session, redirect, request
 from ..models.user import User
-from ..models.password import Password
-
-
+from flask_socketio import SocketIO
+socketio = SocketIO(app)
 
 @app.route('/register')
 def register_user():
@@ -57,3 +56,7 @@ def delete_account(id):
 def logout():
     session.clear()
     return redirect("/")
+
+@socketio.on('disconnect')
+def disconnect_user():
+    session.pop('generated_password', None)
