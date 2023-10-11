@@ -3,6 +3,7 @@ from random import randint, shuffle
 from cryptography.fernet import Fernet
 from flask import flash,session
 
+
 db='password_generator_schema'
 
 class Password:
@@ -49,6 +50,11 @@ class Password:
     @classmethod
     def destroy(cls, id):
         query = f'SELECT * FROM passwords WHERE ID = {id}'
+        return connectToMySQL(db).query_db(query)
+    
+    @classmethod
+    def delete_password(cls, pass_id):
+        query = f'DELETE FROM passwords WHERE created_at < (NOW() - INTERVAL 90 DAY);'
         return connectToMySQL(db).query_db(query)
 
     @staticmethod

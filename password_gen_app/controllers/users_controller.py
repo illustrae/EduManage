@@ -48,6 +48,7 @@ def update_account():
     if not User.profile_validator(request.form):
         return redirect(f'/edit_account/{session["user_logged_id"]}')
     User.update_user_account(request.form)
+    
     return redirect(f'/profile/{session["user_logged_id"]}')
 
 @app.route("/delete_account/<int:id>")
