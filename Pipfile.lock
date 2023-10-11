@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "76152dd3bed45cfa9b7525de91957d4c14b73d5ca44493161be5d25a226fb921"
+            "sha256": "123ad60a54a9c27f591926209b1741268827bea4ad750f73e671adecdb426150"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -56,11 +56,11 @@
         },
         "flaskwebgui": {
             "hashes": [
-                "sha256:1c3cc12a6496de8df26eae7ea3ca4aaf913de1b9246d4a7b141c3abc873374c9",
-                "sha256:82a58daa8f4f9e936b54e392aa3a8b36b5980e404818e8aa7a914f426e7b79a5"
+                "sha256:15ed00ba3df40c7878303249f599b330ba4ac9973f475c0209aeca454f6b25d9",
+                "sha256:a9fce1d566375e52a45fe4f4fc5c68b8ce41cabeef401b7d4d0f218c2b3426c1"
             ],
             "index": "pypi",
-            "version": "==1.0.6"
+            "version": "==1.0.7"
         },
         "itsdangerous": {
             "hashes": [
@@ -351,6 +351,14 @@
             ],
             "markers": "platform_system == 'Darwin'",
             "version": "==0.4.6"
+        },
+        "schedule": {
+            "hashes": [
+                "sha256:14cdeb083a596aa1de6dc77639a1b2ac8bf6eaafa82b1c9279d3612823063d01",
+                "sha256:843bc0538b99c93f02b8b50e3e39886c06f2d003b24f48e1aa4cadfa3f341279"
+            ],
+            "index": "pypi",
+            "version": "==1.2.1"
         },
         "werkzeug": {
             "hashes": [
