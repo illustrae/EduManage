@@ -155,7 +155,7 @@ class User:
         is_valid = True
         if 'new_password' in postData:
             if postData['old_password'] == '':
-                flash("Please input your old password.", "profile")
+                flash("Please input your current password.", "profile")
                 is_valid = False
             if postData['new_password'] == '':
                 flash("Please input your new password.", "profile")
@@ -166,7 +166,7 @@ class User:
             user = User.get_one({'id':session['user_logged_id']})
             if not bcrypt.check_password_hash(user.password, postData['old_password']):
                 is_valid = False
-                flash("Password is incorrect.", "profile")
+                flash("Please verify your information is correct.", "profile")
                 return is_valid
             elif len(postData['new_password']) > 90:
                 print(len(postData['new_password']))
