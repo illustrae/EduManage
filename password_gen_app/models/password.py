@@ -123,7 +123,6 @@ class Password:
             for each_instance in range(values_list[index]):
                 random_index = randint(1,len(character_list[counter])-1)
                 password_generated.append(character_list[counter][random_index-1:random_index][0])
-                character_list[counter].pop(random_index-1)
                 shuffle(password_generated)
             counter+=1
         return "".join(password_generated)

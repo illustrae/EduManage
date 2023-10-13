@@ -11,5 +11,8 @@ th {
 
 .custom-res-font-size {
     font-size: 1rem; /*16px;*/ 
+}
 
+#copy-icon:hover{
+    color: black;
 }
