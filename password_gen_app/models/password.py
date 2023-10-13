@@ -3,6 +3,7 @@ from random import randint, shuffle
 from cryptography.fernet import Fernet
 from flask import flash,session
 
+
 db='password_generator_schema'
 
 class Password:
@@ -50,6 +51,11 @@ class Password:
     def destroy(cls, id):
         query = f'SELECT * FROM passwords WHERE ID = {id}'
         return connectToMySQL(db).query_db(query)
+    
+    @classmethod
+    def delete_password(cls, pass_id):
+        query = f'DELETE FROM passwords WHERE created_at < (NOW() - INTERVAL 90 DAY);'
+        return connectToMySQL(db).query_db(query)
 
     @staticmethod
     def password_form_validator(post_data):
@@ -71,7 +77,6 @@ class Password:
         elif int(post_data['password_length']) < 8:
             flash("Password length should be at least be 8 characters long.", "password_form")
             is_valid = False
-        
         return is_valid
             
         
@@ -118,7 +123,6 @@ class Password:
             for each_instance in range(values_list[index]):
                 random_index = randint(1,len(character_list[counter])-1)
                 password_generated.append(character_list[counter][random_index-1:random_index][0])
-                character_list[counter].pop(random_index-1)
                 shuffle(password_generated)
             counter+=1
         return "".join(password_generated)
