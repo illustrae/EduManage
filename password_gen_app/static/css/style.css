@@ -13,6 +13,21 @@ th {
     font-size: 1rem; /*16px;*/ 
 }
 
+td > i{
+    float: right;
+}
+
+#copy-input{
+    font-size: 2.5rem;
+}
+div > i, #copy-input{
+    height: 3.75rem;
+}
+
+div > i{
+    font-size: 1.75rem;
+}
+
 #copy-icon:hover{
     color: black;
 }

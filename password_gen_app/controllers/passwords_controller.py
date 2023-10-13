@@ -1,6 +1,5 @@
 from flask import Flask, request,session,render_template,redirect
 from password_gen_app import app
-from cryptography.fernet import Fernet
 from ..models.password import Password
 from ..models.user import User
 
@@ -11,8 +10,7 @@ def index():
         return redirect("/logged_in")
     
     if 'generated_password' in session:
-        generated_password = session['generated_password']
-        return render_template('main.html', generated_password = generated_password)
+        return render_template('main.html', generated_password = session['generated_password'])
     else:
         return render_template('main.html')
 
@@ -35,6 +33,7 @@ def generate_password():
 @app.route('/logged_in')
 def logged_main():
     if 'generated_password' in session and 'user_logged_id' in session:
+        Password.create_password()
         return render_template('main_logged_in.html', generated_password = session['generated_password'], user=User.get_one({'id':session['user_logged_id']}))
     else:
         return render_template('main_logged_in.html', user=User.get_one({'id':session['user_logged_id']}))

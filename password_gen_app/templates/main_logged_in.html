@@ -17,7 +17,10 @@
     <div class="mx-auto">
         <div class="navbar d-flex flex-column flex-sm-row p-2 custom-bg-darker col-xxl-6 mx-auto">
             <h3 class="me-sm-auto">Hello, <span class="text-success">{{user.username}}</span>!</h3>
-            
+            <h3 class="me-sm-auto">
+                <span class="text-danger">Password</span> 
+                <span class="text-warning">Generator</span>
+            </h3>
             <div class="d-flex justify-content-center">
                 {% if on_profile == True %}
                     <a href="/logged_in"><button type="button" class="btn btn-outline-primary" >+ New Password</button></a>
@@ -37,11 +40,11 @@
             {% block content %}
 
             <div class="row text-center">
-                <p class="mt-5"> Generated Password:</p>
+                <p class="mt-5 fs-5"> Generated Password:</p>
                 <div class="input-group">
-                    <input type="text" class="form-control text-success fs-2 fw-bold rounded-0 bg-dark 
+                    <input type="text" class="form-control text-success fw-bold rounded-0 bg-dark 
                     border border-1 border-end-0 border-light text-center" value="{{generated_password}}" id="copy-input" readonly>
-                    <i id="copy-icon" class="bi bi-copy rounded-0 bg-dark border border-1 border-start-0 fs-1 my-auto pe-2"></i>
+                    <i id="copy-icon" class="bi bi-copy rounded-0 bg-dark border border-1 border-start-0 p-2"></i>
                 </div>
                 <div class="d-sm-block d-md-none">
                     {% with messages = get_flashed_messages(category_filter=['password_form']) %}

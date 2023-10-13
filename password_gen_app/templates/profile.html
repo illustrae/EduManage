@@ -18,7 +18,7 @@
     <div class="mx-sm-auto m-0">
       <table class="table table-dark table-striped mx-auto text-center">
         <thead>
-          <tr>
+          <tr class="">
             <th>Date Created</th>
             <th>Generated Password</th>
             <!-- Add other password attributes here -->
@@ -28,9 +28,9 @@
           {% for password_obj in user.generated_passwords %}
           <tr>
             <td>{{ password_obj.created_at.strftime('%B %d, %Y') }}</td>
-            <td class="d-flex">
-              <p class="mx-auto">{{ password_obj.gen_password }}</p>
-              <i id="copy-icon" class="bi bi-copy me-2"></i>
+            <td>
+              <span class="mx-auto">{{ password_obj.gen_password }}</span>
+              <i id="copy-icon" class="bi bi-copy"></i>
             </td>
             <!-- Add other password attributes here -->
           </tr>

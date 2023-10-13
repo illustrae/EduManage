@@ -28,13 +28,11 @@
         <div class="container col-xxl-6 ">
 
             <div class="text-center">
-                <p class="mt-5"> Generated Password:</p>
+                <p class="mt-5 fs-5"> Generated Password:</p>
                 <div class="input-group">
-                    <input type="text" class="form-control text-success fs-2 fw-bold rounded-0 bg-dark 
+                    <input type="text" class="form-control text-success fw-bold rounded-0 bg-dark 
                     border border-1 border-end-0 border-light text-center" value="{{generated_password}}" id="copy-input" readonly>
-                    <i id="copy-icon" class="bi bi-copy"></i>
-                    
-                    
+                    <i id="copy-icon" class="bi bi-copy rounded-0 bg-dark border border-1 border-start-0 p-2"></i>
                 </div>
                 <div class="d-sm-block d-md-none">
                     {% with messages = get_flashed_messages(category_filter=['password_form']) %}
