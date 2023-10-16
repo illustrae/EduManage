@@ -53,7 +53,7 @@ class Password:
         return connectToMySQL(db).query_db(query)
     
     @classmethod
-    def delete_password(cls, pass_id):
+    def delete_password(cls):
         query = f'DELETE FROM passwords WHERE created_at < (NOW() - INTERVAL 90 DAY);'
         return connectToMySQL(db).query_db(query)
 
