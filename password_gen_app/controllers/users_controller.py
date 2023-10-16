@@ -33,6 +33,12 @@ def process_login():
 def user_profile(id):
     if 'user_logged_id' not in session:
         return redirect('/logout')
+    if 'visited' in session:
+        pass
+    else:
+        Password.delete_password()
+        session['visited'] = True
+    print(session, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     return render_template('profile.html', user=User.user_with_passwords({"id": id}),on_profile = True)
 
 @app.route('/edit_account/<int:id>')
@@ -71,6 +77,7 @@ def process_password():
 @app.route("/logout")
 def logout():
     session.clear()
+    print(session.clear())
     return redirect("/")
 
 # @app.route('/close')
