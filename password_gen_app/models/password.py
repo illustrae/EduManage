@@ -32,20 +32,16 @@ class Password:
     @classmethod
     def get_all_passwords(cls):
         query = 'SELECT * FROM passwords'
-        results = connectToMySQL(db).query_db(query)
+        results = Password.decode_password(connectToMySQL(db).query_db(query))
         passwords = []
         for row in results:
-            pass_gen=Fernet(row['keygen'])
-            row['gen_password']= pass_gen.decrypt(row['gen_password']).decode()
             passwords.append(cls(row))
         return passwords
     
     @classmethod
     def get_last_password(cls):
         query = 'SELECT * FROM passwords ORDER BY id DESC limit 1 '
-        result = connectToMySQL(db).query_db(query)
-        pass_gen=Fernet(result[0]['keygen'])
-        result[0]['gen_password']= pass_gen.decrypt(result[0]['gen_password']).decode()
+        result = Password.decode_password(connectToMySQL(db).query_db(query))
         return cls(result[0])
     
     
@@ -58,7 +54,15 @@ class Password:
     def delete_password(cls):
         query = f'DELETE FROM passwords WHERE created_at < (NOW() - INTERVAL 90 DAY);'
         return connectToMySQL(db).query_db(query)
-
+    
+    @staticmethod
+    def decode_password(db_data):
+        if len(db_data) > 0 and db_data[0]['gen_password'] != None:
+            for row in db_data:
+                pass_gen=Fernet(row['keygen'])
+                row['gen_password']= pass_gen.decrypt(row['gen_password']).decode()
+        return db_data
+    
     @staticmethod
     def password_form_validator(post_data):
         """This is a password validator for the password generation form.

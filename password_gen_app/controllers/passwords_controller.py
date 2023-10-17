@@ -23,11 +23,6 @@ def generate_password():
         else:
             return redirect('/')
     session['generated_password'] = Password.password_generator(request.form, request.form.getlist("params"))
-
-    if 'user_logged_id' in session:
-        Password.create_password()
-        return redirect('/logged_in')
-    
     return redirect('/')
 
 @app.route('/logged_in')
