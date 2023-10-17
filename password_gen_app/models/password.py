@@ -41,9 +41,11 @@ class Password:
         return passwords
     
     @classmethod
-    def get_one_password(cls,id):
-        query = f'SELECT * FROM passwords WHERE ID = {id}'
+    def get_last_password(cls):
+        query = 'SELECT * FROM passwords ORDER BY id DESC limit 1 '
         result = connectToMySQL(db).query_db(query)
+        pass_gen=Fernet(result[0]['keygen'])
+        result[0]['gen_password']= pass_gen.decrypt(result[0]['gen_password']).decode()
         return cls(result[0])
     
     
