@@ -23,15 +23,18 @@
           <tr class="">
             <th>Date Created</th>
             <th>Generated Password</th>
+            <th> </th>
             <!-- Add other password attributes here -->
           </tr>
         </thead>
         <tbody>
             {% for password_obj in user.generated_passwords %}
             <tr>
-              <td>{{ password_obj.created_at.strftime('%B %d, %Y') }}</td>
-              <td>
-                <span class="mx-auto">{{ password_obj.gen_password }}</span>
+              <td class="my-auto">{{ password_obj.created_at.strftime('%B %d, %Y') }}</td>
+              <td class="text-break">
+                {{ password_obj.gen_password }}
+              </td>
+              <td class="align-middle">
                 <i id="copy-icon" class="bi bi-copy"></i>
               </td>
               <!-- Add other password attributes here -->

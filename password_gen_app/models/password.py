@@ -111,12 +111,14 @@ class Password:
         return character_list
 
     @staticmethod
-    def populate_and_shuffle(values_list, character_list):
+    def populate_and_shuffle(values_list, char_list):
         """This is a helper function that takes in several lists and creates a new list of strings that forms the generated password.   
 
         Args:
             values_list (list): This is a list that declared on line 118. The values in the list are the number of instances in each category of the params.  
-            character_list (list): The finished and completed return value from create_character_list on line 14. 
+            char_list (list): The finished and completed return value from create_character_list on line 111. 
+        
+        Other Variables:
             counter(integer): A count to keep track of when to iterate the character_list to access the new list of string values.
             
         Returns:
@@ -126,9 +128,18 @@ class Password:
         counter=0
         
         for index in range(len(values_list)):
+            popped_character_list = char_list[counter].copy() 
+            
             for each_instance in range(values_list[index]):
-                random_index = randint(1,len(character_list[counter])-1)
-                password_generated.append(character_list[counter][random_index-1:random_index][0])
+                
+                if len(popped_character_list) == 1:
+                    password_generated.append(popped_character_list[0])
+                    popped_character_list.pop(0)
+                    popped_character_list.extend(char_list[counter]) 
+                else:
+                    random_index = randint(1,len(popped_character_list)-1)
+                    password_generated.append(popped_character_list[random_index-1:random_index][0])
+                    popped_character_list.pop(random_index-1)
                 shuffle(password_generated)
             counter+=1
         return "".join(password_generated)
