@@ -2,7 +2,6 @@ from password_gen_app.config.mysqlconnection import connectToMySQL
 from password_gen_app import app
 import re
 from password_gen_app.models.password import Password
-from cryptography.fernet import Fernet
 from flask import flash,session
 from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt(app)
@@ -19,17 +18,12 @@ class User:
         self.generated_passwords = []
 
     @classmethod
-    def create(cls, postData):
-        pw_hash = bcrypt.generate_password_hash(postData['password'])
-        data = {
-            'first_name': postData['first_name'],
-            'last_name': postData['last_name'],
-            'email': postData['email'],
-            'username': postData['username'],
-            'password': pw_hash
-        }
+    def create(cls, data):
+        postData = {}
+        postData |= data
+        postData['password'] = bcrypt.generate_password_hash(postData['password'])
         query = 'INSERT INTO users (first_name, last_name, email, username, password) VALUES ( %(first_name)s, %(last_name)s, %(email)s, %(username)s, %(password)s)'
-        return connectToMySQL(db).query_db(query,data)
+        return connectToMySQL(db).query_db(query,postData)
     
     @classmethod
     def get_one(cls,data):
@@ -40,22 +34,20 @@ class User:
     @classmethod
     def user_with_passwords(cls, data):
         query = "SELECT * FROM users LEFT JOIN passwords ON users.id = passwords.users_id WHERE users.id = %(id)s ORDER BY passwords.created_at desc;"
-        result = connectToMySQL(db).query_db(query, data)
-        print(result)
+        result = Password.decode_password(connectToMySQL(db).query_db(query, data))
         user_passwords = cls(result[0])
-        if result[0]['keygen'] != None:
-            for password in result:
-                pass_gen=Fernet(password['keygen'])
-                password['gen_password']= pass_gen.decrypt(password['gen_password']).decode()
-                data = {
-                "id": password['passwords.id'],
-                "gen_password": password['gen_password'],
-                "keygen": password['keygen'],
-                "users_id": password['users_id'], 
-                "created_at": password['passwords.created_at'],
-                "updated_at": password['passwords.updated_at']
-                }
-                user_passwords.generated_passwords.append(Password(data))
+        if result[0]['keygen'] == None:
+            return user_passwords
+        for password in result:
+            data = {
+            "id": password['passwords.id'],
+            "gen_password": password['gen_password'],
+            "keygen": password['keygen'],
+            "users_id": password['users_id'], 
+            "created_at": password['passwords.created_at'],
+            "updated_at": password['passwords.updated_at']
+            }
+            user_passwords.generated_passwords.append(Password(data))
         return user_passwords
     
     @classmethod

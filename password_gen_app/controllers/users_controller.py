@@ -33,6 +33,11 @@ def process_login():
 def user_profile(id):
     if 'user_logged_id' not in session:
         return redirect('/logout')
+    if 'visited' in session:
+        pass
+    else:
+        Password.delete_password()
+        session['visited'] = True
     return render_template('profile.html', user=User.user_with_passwords({"id": id}),on_profile = True)
 
 @app.route('/edit_account/<int:id>')
@@ -56,6 +61,7 @@ def delete_account(id):
     if 'user_logged_id' not in session:
         return redirect('/logout')
     User.delete_user_account({"id": id})
+    session.clear()
     return redirect("/")
 
 @app.route('/change_password')
@@ -71,6 +77,7 @@ def process_password():
 @app.route("/logout")
 def logout():
     session.clear()
+    print(session.clear())
     return redirect("/")
 
 # @app.route('/close')
@@ -82,5 +89,5 @@ def logout():
 
 @socketio.on('disconnect')
 def disconnect_user():
-    session.pop('generated_password', None)
+    session.clear()
 

@@ -32,18 +32,16 @@ class Password:
     @classmethod
     def get_all_passwords(cls):
         query = 'SELECT * FROM passwords'
-        results = connectToMySQL(db).query_db(query)
+        results = Password.decode_password(connectToMySQL(db).query_db(query))
         passwords = []
         for row in results:
-            pass_gen=Fernet(row['keygen'])
-            row['gen_password']= pass_gen.decrypt(row['gen_password']).decode()
             passwords.append(cls(row))
         return passwords
     
     @classmethod
-    def get_one_password(cls,id):
-        query = f'SELECT * FROM passwords WHERE ID = {id}'
-        result = connectToMySQL(db).query_db(query)
+    def get_last_password(cls):
+        query = 'SELECT * FROM passwords ORDER BY id DESC limit 1 '
+        result = Password.decode_password(connectToMySQL(db).query_db(query))
         return cls(result[0])
     
     
@@ -53,10 +51,18 @@ class Password:
         return connectToMySQL(db).query_db(query)
     
     @classmethod
-    def delete_password(cls, pass_id):
+    def delete_password(cls):
         query = f'DELETE FROM passwords WHERE created_at < (NOW() - INTERVAL 90 DAY);'
         return connectToMySQL(db).query_db(query)
-
+    
+    @staticmethod
+    def decode_password(db_data):
+        if len(db_data) > 0 and db_data[0]['gen_password'] != None:
+            for row in db_data:
+                pass_gen=Fernet(row['keygen'])
+                row['gen_password']= pass_gen.decrypt(row['gen_password']).decode()
+        return db_data
+    
     @staticmethod
     def password_form_validator(post_data):
         """This is a password validator for the password generation form.
@@ -105,12 +111,14 @@ class Password:
         return character_list
 
     @staticmethod
-    def populate_and_shuffle(values_list, character_list):
+    def populate_and_shuffle(values_list, char_list):
         """This is a helper function that takes in several lists and creates a new list of strings that forms the generated password.   
 
         Args:
             values_list (list): This is a list that declared on line 118. The values in the list are the number of instances in each category of the params.  
-            character_list (list): The finished and completed return value from create_character_list on line 14. 
+            char_list (list): The finished and completed return value from create_character_list on line 111. 
+        
+        Other Variables:
             counter(integer): A count to keep track of when to iterate the character_list to access the new list of string values.
             
         Returns:
@@ -120,9 +128,18 @@ class Password:
         counter=0
         
         for index in range(len(values_list)):
+            popped_character_list = char_list[counter].copy() 
+            
             for each_instance in range(values_list[index]):
-                random_index = randint(1,len(character_list[counter])-1)
-                password_generated.append(character_list[counter][random_index-1:random_index][0])
+                
+                if len(popped_character_list) == 1:
+                    password_generated.append(popped_character_list[0])
+                    popped_character_list.pop(0)
+                    popped_character_list.extend(char_list[counter]) 
+                else:
+                    random_index = randint(1,len(popped_character_list)-1)
+                    password_generated.append(popped_character_list[random_index-1:random_index][0])
+                    popped_character_list.pop(random_index-1)
                 shuffle(password_generated)
             counter+=1
         return "".join(password_generated)

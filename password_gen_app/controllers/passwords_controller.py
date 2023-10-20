@@ -23,17 +23,14 @@ def generate_password():
         else:
             return redirect('/')
     session['generated_password'] = Password.password_generator(request.form, request.form.getlist("params"))
-
-    if 'user_logged_id' in session:
-        Password.create_password()
-        return redirect('/logged_in')
-    
     return redirect('/')
 
 @app.route('/logged_in')
 def logged_main():
     if 'generated_password' in session and 'user_logged_id' in session:
         Password.create_password()
-        return render_template('main_logged_in.html', generated_password = session['generated_password'], user=User.get_one({'id':session['user_logged_id']}))
+        session.pop('generated_password')
+        generate_password = Password.get_last_password()
+        return render_template('main_logged_in.html', generated_password = generate_password.gen_password, user=User.get_one({'id':session['user_logged_id']}))
     else:
         return render_template('main_logged_in.html', user=User.get_one({'id':session['user_logged_id']}))
