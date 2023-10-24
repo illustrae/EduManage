@@ -10,7 +10,7 @@ socketio = SocketIO(app)
 @app.route('/register')
 def register_user():
 
-    return render_template('register.html')
+    return render_template('register.html',on_log_reg =True)
 
 @app.route('/process_register', methods=['POST'])
 def process_register():
@@ -21,7 +21,7 @@ def process_register():
 
 @app.route('/login')
 def login():
-    return render_template('login.html')
+    return render_template('login.html',on_log_reg =True)
 
 @app.route('/process_login', methods=['POST'])
 def process_login():

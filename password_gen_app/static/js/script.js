@@ -11,9 +11,9 @@ const copyWord = input => {
     navigator.clipboard.writeText(savedValue);
     if(input.localName == "input"){
         input.value = "Copied!"
-        setTimeout(()=>input.value = saved_value, 1000);
+        setTimeout(()=>input.value = savedValue, 1000);
     }else{
         input.innerHTML = "Copied!"
-        setTimeout(()=>input.innerHTML = saved_value, 1000);
+        setTimeout(()=>input.innerHTML = savedValue, 1000);
     }
 }

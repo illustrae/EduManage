@@ -17,14 +17,22 @@
     <div class="mx-auto">
         <div class="navbar d-flex flex-column-reverse flex-sm-row-reverse p-2 custom-bg-darker col-lg-6 mx-auto text-end">
             <div class="d-flex justify-content-center">
-                <a class="mx-1" href="/register"><button type="button" class="btn btn-outline-primary">Register</button></a>	
-                <a class="mx-1" href="/login"><button type="button" class="btn btn-outline-primary">Login</button></a>	            
+                {% if on_log_reg == True %}
+                    <a class="mx-1" href="/"><button type="button" class="btn btn-outline-primary">Home</button></a>	
+                    <a class="mx-1" href="/register"><button type="button" class="btn btn-outline-primary">Register</button></a>	
+                    <a class="mx-1" href="/login"><button type="button" class="btn btn-outline-primary">Login</button></a>	
+                {% else %}
+                    <a class="mx-1" href="/register"><button type="button" class="btn btn-outline-primary">Register</button></a>	
+                    <a class="mx-1" href="/login"><button type="button" class="btn btn-outline-primary">Login</button></a>
+                {% endif %}
+                
             </div>
             <h3 class="me-sm-auto">
                 <span class="text-danger">Password</span> 
                 <span class="text-warning">Generator</span>
             </h3>
         </div>	       
+        {%block content%}
         <div class="container col-xxl-6 ">
 
             <div class="text-center">
@@ -115,6 +123,8 @@
                 </div>
             </div>
         </div>
+        {%endblock content%}
+
     </div>
 </body>
 
