@@ -10,7 +10,7 @@ def index():
         return redirect("/logged_in")
     
     if 'generated_password' in session:
-        return render_template('main.html', generated_password = session['generated_password'])
+        return render_template('main.html',  generated_password = session['generated_password'])
     else:
         return render_template('main.html')
 

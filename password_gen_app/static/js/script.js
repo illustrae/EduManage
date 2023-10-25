@@ -1,30 +1,19 @@
 document.querySelectorAll('#copy-icon').forEach(icon => {
     icon.addEventListener('click', (event) => {
-        if (event.target.parentElement.localName == "td"){
-        let input = event.target.parentElement.previousElementSibling
+        const input=event.target.parentElement.localName == "td" ? event.target.parentElement.previousElementSibling
+        :event.target.previousElementSibling
         copyWord(input)
-        }
-        else{
-            let input = event.target.previousElementSibling
-            copyWord(input)
-        }
     })
 })
 
-function copyWord(input){
+const copyWord = input => {
+    const savedValue = input.localName == "input" ? input.value : input.innerHTML; 
+    navigator.clipboard.writeText(savedValue);
     if(input.localName == "input"){
-        let saved_value = input.value
-        navigator.clipboard.writeText(input.value)  
         input.value = "Copied!"
-        setTimeout(()=>input.value = saved_value, 1000);
+        setTimeout(()=>input.value = savedValue, 1000);
     }else{
-        let saved_value = input.innerHTML
-        navigator.clipboard.writeText(input.innerHTML)  
         input.innerHTML = "Copied!"
-        setTimeout(()=>input.innerHTML = saved_value, 1000);
+        setTimeout(()=>input.innerHTML = savedValue, 1000);
     }
 }
-
-
-
-

@@ -109,8 +109,9 @@ class User:
             # elif not username_exist:
             #     flash("Username already taken.", 'register')
             #     is_valid = False
-            if is_valid:
-                flash("Profile Successfully Changed!", 'register')
+            # if  0 <= len(postData['password']) <= 7:
+            #     flash("Password needs to be at least 8 characters.", 'register')
+            #     is_valid = False
         if 'password' in postData:
             if  0 <= len(postData['password']) <= 7:
                 flash("Password needs to be at least 8 characters.", 'register')
@@ -121,7 +122,8 @@ class User:
             elif postData['c_password'] != postData['password']:
                 flash("Passwords do not match!", 'register')
                 is_valid = False
-            
+        if is_valid:
+            flash("Success!", 'register')
         return is_valid
     
     @staticmethod
